@@ -1,0 +1,85 @@
+{
+  "title": "Condo Control",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect your Condo Control account",
+        "description": "Sign in with your resident account. Add each household member separately to give them their own device and package sensors.",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      },
+      "property": {
+        "title": "Choose your condo",
+        "description": "Choose a property linked to your account. You can add this account again to monitor another property. Leave the name blank to use your resident name. The property time zone is used for package arrival times.",
+        "data": {
+          "workspace_id": "Condo / property",
+          "name": "Resident display name (optional)",
+          "poll_interval": "Polling interval (minutes)",
+          "property_time_zone": "Property time zone"
+        }
+      },
+      "reauth_confirm": {
+        "title": "Reconnect Condo Control",
+        "description": "Sign in again with the same resident account for {name}.",
+        "data": {
+          "email": "Email",
+          "password": "Password"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Could not reach Condo Control. Try again later.",
+      "invalid_auth": "The credentials were rejected or access was denied.",
+      "invalid_response": "Condo Control returned unexpected data. Please report this issue without including personal information.",
+      "packages_not_enabled": "Package tracking is not enabled for this account at this property.",
+      "invalid_property": "Choose a property from the list.",
+      "two_factor_required": "This account requires two-factor authentication. This version does not support the verification flow yet."
+    },
+    "abort": {
+      "already_configured": "This resident account and property are already configured.",
+      "no_workspaces": "There are no properties linked to this account.",
+      "reauth_successful": "Your account has been reconnected.",
+      "unique_id_mismatch": "Sign in with the same resident account as the existing entry."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Package tracking options",
+        "description": "All sensors for this account share one poll. The interval can be between 1 and 1440 minutes.",
+        "data": {
+          "poll_interval": "Polling interval (minutes)",
+          "property_time_zone": "Property time zone"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "packages_waiting": {
+        "name": "Packages waiting"
+      },
+      "oldest_package_received": {
+        "name": "Oldest waiting package received"
+      },
+      "last_successful_update": {
+        "name": "Last successful update"
+      }
+    },
+    "binary_sensor": {
+      "package_waiting": {
+        "name": "Package waiting"
+      },
+      "last_update_successful": {
+        "name": "Last update successful"
+      }
+    },
+    "button": {
+      "refresh": {
+        "name": "Refresh"
+      }
+    }
+  }
+}

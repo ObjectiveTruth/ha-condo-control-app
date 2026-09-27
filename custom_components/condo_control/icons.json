@@ -1,0 +1,28 @@
+{
+  "entity": {
+    "sensor": {
+      "packages_waiting": {
+        "default": "mdi:package-variant"
+      },
+      "oldest_package_received": {
+        "default": "mdi:package-variant-closed-clock"
+      },
+      "last_successful_update": {
+        "default": "mdi:update"
+      }
+    },
+    "binary_sensor": {
+      "package_waiting": {
+        "default": "mdi:package-variant-closed"
+      },
+      "last_update_successful": {
+        "default": "mdi:cloud-check-outline"
+      }
+    },
+    "button": {
+      "refresh": {
+        "default": "mdi:refresh"
+      }
+    }
+  }
+}

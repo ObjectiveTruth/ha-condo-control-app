@@ -1,0 +1,13 @@
+.venv/
+.context/
+.ha-dev/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.py[cod]
+.coverage
+coverage.xml
+htmlcov/
+.DS_Store
+.env
+secrets.yaml
