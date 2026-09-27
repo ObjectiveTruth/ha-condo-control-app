@@ -2,6 +2,7 @@
 
 from collections.abc import Mapping
 from typing import Any
+from zoneinfo import available_timezones
 
 import voluptuous as vol
 from homeassistant.config_entries import (
@@ -12,7 +13,6 @@ from homeassistant.config_entries import (
 )
 from homeassistant.const import CONF_EMAIL, CONF_NAME, CONF_PASSWORD
 from homeassistant.core import callback
-from homeassistant.helpers import config_validation as cv
 from homeassistant.helpers import selector
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 
@@ -77,7 +77,12 @@ def options_schema(defaults: Mapping[str, Any]) -> vol.Schema:
             ),
             vol.Required(
                 CONF_PROPERTY_TIME_ZONE, default=defaults[CONF_PROPERTY_TIME_ZONE]
-            ): cv.time_zone,
+            ): selector.SelectSelector(
+                selector.SelectSelectorConfig(
+                    options=sorted(available_timezones()),
+                    mode=selector.SelectSelectorMode.DROPDOWN,
+                )
+            ),
         }
     )
 
