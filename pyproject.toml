@@ -1,6 +1,6 @@
 [project]
 name = "ha-condo-control-app"
-version = "0.1.1"
+version = "0.1.2"
 description = "Condo Control package tracking for Home Assistant"
 requires-python = ">=3.14.2"
 

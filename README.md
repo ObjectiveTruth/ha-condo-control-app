@@ -37,14 +37,16 @@ For manual installation, copy `custom_components/condo_control` into your Home A
 
 ## Entities
 
-All six entities are enabled by default. They share the same polling results, so enabling them all adds no scheduled API requests. Individual entities can be disabled in Home Assistant.
+Five entities are enabled by default. The **Last successful update** timestamp sensor is disabled by default to avoid a state/history entry on every successful poll. The **Last update successful** on/off status stays enabled for failure alerts. All entities share the same polling results; enabling the optional timestamp adds no API requests.
+
+The successful-poll timestamp is still stored internally and survives restarts. To use it in freshness alerts, enable **Last successful update** in the device's entity settings. Upgrades preserve existing entity enable/disable preferences; users with this sensor already enabled can disable it there.
 
 | Entity | Meaning |
 | --- | --- |
 | **Packages waiting** | Number of returned records with `IsPickedUp=false` |
 | **Package waiting** | On when the count is greater than zero |
 | **Oldest waiting package received** | Arrival timestamp of the oldest outstanding record; unknown when none are waiting |
-| **Last successful update** | Most recent successful package poll; retains that timestamp during outages |
+| **Last successful update** | Disabled by default. Most recent successful package poll; retains that timestamp during outages |
 | **Last update successful** | Whether the latest API update succeeded; off when showing cached data after an error |
 | **Refresh** | Request an immediate refresh using the shared coordinator |
 
@@ -68,7 +70,7 @@ packages:
 
 These are illustrative records, not real resident data. Attributes contain all records returned by the endpoint, including collected ones. Descriptions are preserved because courier, recipient, and storage details are not separate structured fields in this endpoint.
 
-Package detail attributes are excluded from Home Assistant Recorder history to reduce storage and avoid retaining descriptions indefinitely. They remain visible in the current entity state. The count and timestamp entities retain normal history. A single latest snapshot, including descriptions, is stored locally in Home Assistant so the last valid reading survives restarts. It is deleted when the integration entry is removed.
+Package detail attributes are excluded from Home Assistant Recorder history to reduce storage and avoid retaining descriptions indefinitely. They remain visible in the current entity state. Enabled count and timestamp entities retain normal history. A single latest snapshot, including descriptions, is stored locally in Home Assistant so the last valid reading survives restarts. It is deleted when the integration entry is removed.
 
 Change the interval or time zone using **Configure** on the integration entry. These settings apply only to that account/property device; other devices keep their own settings. Changing options reloads that entry. Authentication tokens are retained in memory and renewed when rejected; the integration does not log passwords, tokens, or response bodies. Credentials are stored in Home Assistant's standard configuration-entry storage, so protect your Home Assistant configuration and backups. Downloadable diagnostics exclude credentials and personal package details.
 

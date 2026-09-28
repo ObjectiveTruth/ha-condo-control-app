@@ -82,6 +82,7 @@ class LastUpdateSensor(CondoControlEntity, SensorEntity):
     _attr_translation_key = "last_successful_update"
     _attr_device_class = SensorDeviceClass.TIMESTAMP
     _attr_entity_category = EntityCategory.DIAGNOSTIC
+    _attr_entity_registry_enabled_default = False
 
     def __init__(self, entry: CondoControlConfigEntry) -> None:
         super().__init__(entry, "last_successful_update")

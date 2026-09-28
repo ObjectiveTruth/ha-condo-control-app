@@ -30,6 +30,15 @@ async def setup(hass, entry):
     await hass.async_block_till_done()
 
 
+async def enable_timestamp(hass, entry):
+    """Opt into the diagnostic timestamp using the entity registry."""
+    last_id = entity_id(hass, "sensor", "100_200_last_successful_update")
+    er.async_get(hass).async_update_entity(last_id, disabled_by=None)
+    assert await hass.config_entries.async_reload(entry.entry_id)
+    await hass.async_block_till_done()
+    return last_id
+
+
 async def test_entities_and_pickup(hass, client, entry):
     await setup(hass, entry)
     count_id = entity_id(hass, "sensor", "100_200_packages_waiting")
@@ -42,6 +51,17 @@ async def test_entities_and_pickup(hass, client, entry):
     assert hass.states.get(binary_id).state == "on"
     assert hass.states.get(oldest_id).state == "2026-09-25T17:38:00+00:00"
     assert entry.runtime_data.update_interval == timedelta(minutes=5)
+    registry = er.async_get(hass)
+    timestamp_id = entity_id(hass, "sensor", "100_200_last_successful_update")
+    assert (
+        registry.async_get(timestamp_id).disabled_by
+        is er.RegistryEntryDisabler.INTEGRATION
+    )
+    assert hass.states.get(timestamp_id) is None
+    assert entry.runtime_data.last_success is not None
+    status_id = entity_id(hass, "binary_sensor", "100_200_last_update_successful")
+    assert registry.async_get(status_id).disabled_by is None
+    assert hass.states.get(status_id).state == "on"
     client.get_packages.return_value = tuple(
         replace(item, is_picked_up=True) for item in client.get_packages.return_value
     )
@@ -57,7 +77,7 @@ async def test_entities_and_pickup(hass, client, entry):
 async def test_outage_and_recovery(hass, client, entry):
     await setup(hass, entry)
     count_id = entity_id(hass, "sensor", "100_200_packages_waiting")
-    last_id = entity_id(hass, "sensor", "100_200_last_successful_update")
+    last_id = await enable_timestamp(hass, entry)
     last_success = hass.states.get(last_id).state
     for error in (CannotConnect("Offline"), InvalidResponse("Missing package list")):
         client.get_packages.side_effect = error
@@ -122,7 +142,7 @@ async def test_diagnostics_exclude_personal_data(hass, client, entry):
 async def test_cached_reading_survives_reload_during_outage(hass, client, entry):
     await setup(hass, entry)
     count_id = entity_id(hass, "sensor", "100_200_packages_waiting")
-    last_id = entity_id(hass, "sensor", "100_200_last_successful_update")
+    last_id = await enable_timestamp(hass, entry)
     previous_time = hass.states.get(last_id).state
     client.login.side_effect = CannotConnect("Offline")
     assert await hass.config_entries.async_reload(entry.entry_id)
